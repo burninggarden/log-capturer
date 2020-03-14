@@ -1,6 +1,3 @@
-import SyncCallback	 from 'test/interface/sync-callback';
-import AsyncCallback from 'test/interface/async-callback';
-
 interface AsyncCallback {
 	() : Promise<any>;
 }
