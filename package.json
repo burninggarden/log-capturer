@@ -1,11 +1,11 @@
 {
-  "name": "@burninggarden/PROJECT_PLACEHOLDER",
-  "description": "Your project description here",
+  "name": "@burninggarden/log-capturer",
+  "description": "Captures logs",
   "version": "0.0.1",
   "private": false,
   "author": "Burning Garden",
   "homepage": "https://burninggarden.com",
-  "repository": "https://github.com/burninggarden/PROJECT_PLACEHOLDER",
+  "repository": "https://github.com/burninggarden/log-capturer",
   "main": "./dist/src/index.js",
   "dependencies": {
     "@types/node": "10.9.4",

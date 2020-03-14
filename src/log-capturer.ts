@@ -1,6 +1,14 @@
 import SyncCallback	 from 'test/interface/sync-callback';
 import AsyncCallback from 'test/interface/async-callback';
 
+interface AsyncCallback {
+	() : Promise<any>;
+}
+
+interface SyncCallback {
+	() : void;
+}
+
 interface Writer {
 	(buffer: string | Buffer, callback?: Function): boolean;
 	(message: string, encoding?: string, callback?: Function): boolean;
