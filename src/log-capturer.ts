@@ -1,9 +1,9 @@
 interface AsyncCallback {
-	() : Promise<any>;
+	(): Promise<any>;
 }
 
 interface SyncCallback {
-	() : void;
+	(): void;
 }
 
 interface Writer {
@@ -12,19 +12,22 @@ interface Writer {
 }
 
 class LogCapturer {
-
-	private capturedOutput : string = '';
-	private originalWrite	: Writer;
-
-	public static capture(callback: SyncCallback) : string {
-		return (new this()).capture(callback);
+	public static capture(callback: SyncCallback): string {
+		return new this().capture(callback);
 	}
 
-	public static captureAsync(callback) : Promise<string> {
-		return (new this()).captureAsync(callback);
+	public static captureAsync(callback: AsyncCallback): Promise<string> {
+		return new this().captureAsync(callback);
 	}
 
-	public capture(callback: SyncCallback) : string {
+	private capturedOutput: string = '';
+	private originalWrite: Writer;
+
+	public constructor() {
+		this.originalWrite = process.stdout.write;
+	}
+
+	public capture(callback: SyncCallback): string {
 		this.replaceWrite();
 
 		callback();
@@ -34,33 +37,32 @@ class LogCapturer {
 		return this.capturedOutput;
 	}
 
-	public captureAsync(callback: AsyncCallback) : Promise<string> {
+	public captureAsync(callback: AsyncCallback): Promise<string> {
 		this.replaceWrite();
 
-		return callback().then(
-			success => {
-				this.restoreWrite();
+		return callback().then((success) => {
+			this.restoreWrite();
 
-				return this.capturedOutput;
-			}
-		);
+			return this.capturedOutput;
+		});
 	}
 
-	private replaceWrite() : void {
-		this.originalWrite = process.stdout.write;
-
-		process.stdout.write = this.handleStdout.bind(this);
+	private replaceWrite(): void {
+		process.stdout.write = this.handleStdout.bind(this) as Writer;
 	}
 
-	private handleStdout(message: string, encoding?: string, callback?: Function) : boolean {
+	private handleStdout(
+		message: string,
+		encoding?: string,
+		callback?: Function
+	): boolean {
 		this.capturedOutput += message;
 		return true;
 	}
 
-	private restoreWrite() : void {
+	private restoreWrite(): void {
 		process.stdout.write = this.originalWrite;
 	}
-
 }
 
 export default LogCapturer;
